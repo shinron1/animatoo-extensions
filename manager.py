@@ -741,11 +741,12 @@ class Handler(BaseHTTPRequestHandler):
         try:
             subprocess.run(["git", "add", "-A"], cwd=WORKDIR, check=True, capture_output=True)
             result = subprocess.run(["git", "diff", "--cached", "--quiet"], cwd=WORKDIR)
-            if result.returncode == 0:
-                return self._json_response({"message": "لا توجد تغييرات"})
-            msg = f"تحديث الإضافات - {datetime.now().strftime('%Y-%m-%d %H:%M')}"
-            subprocess.run(["git", "commit", "-m", msg], cwd=WORKDIR, check=True, capture_output=True)
-            subprocess.run(["git", "push"], cwd=WORKDIR, check=True, capture_output=True)
+            has_changes = result.returncode != 0
+            if has_changes:
+                msg = f"تحديث الإضافات - {datetime.now().strftime('%Y-%m-%d %H:%M')}"
+                subprocess.run(["git", "commit", "-m", msg], cwd=WORKDIR, check=True, capture_output=True)
+            subprocess.run(["git", "pull", "--rebase", "origin", "main"], cwd=WORKDIR, check=False, capture_output=True)
+            subprocess.run(["git", "push", "origin", "main"], cwd=WORKDIR, check=True, capture_output=True)
             self._json_response({"message": "تم الرفع إلى GitHub بنجاح"})
         except subprocess.CalledProcessError as e:
             err = e.stderr.decode() if e.stderr else str(e)
