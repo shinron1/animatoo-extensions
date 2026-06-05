@@ -1,5 +1,5 @@
 // ==MiruExtension==
-// @name       لاى
+// @name       anime3rb
 // @version    v1.0.0
 // @author     you
 // @lang       ar
