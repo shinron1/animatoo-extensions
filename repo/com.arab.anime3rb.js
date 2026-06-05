@@ -1,14 +1,14 @@
 // ==MiruExtension==
-// @name         Anime3rb
-// @version      v1.0.0
-// @author       you
-// @lang         ar
-// @license      MIT
-// @icon         https://anime3rb.com/favicon.ico
-// @package      com.arab.anime3rb
-// @type         bangumi
-// @webSite      https://anime3rb.com
-// @description  أنمي من Supabase
+// @name       لاى
+// @version    v1.0.0
+// @author     you
+// @lang       ar
+// @license    MIT
+// @icon       https://anime3rb.com/favicon.ico
+// @package    com.arab.anime3rb
+// @type       bangumi
+// @webSite    https://anime3rb.com
+// @description أنمي من Supabase
 // ==/MiruExtension==
 
 const SUPABASE_URL = "https://iwccaogufwaqzrodojvh.supabase.co/rest/v1"

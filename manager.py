@@ -340,7 +340,7 @@ async function api(method,path,body){
   if(body){opts.headers['Content-Type']='application/json';opts.body=JSON.stringify(body)}
   const r=await fetch('/api'+path,opts);
   const d=await r.json();
-  if(!r.ok){toast(d.error||'خطأ','error');throw new Error(d.error)}
+  if(!r.ok){console.error('API error ['+r.status+']:', d.error);toast(d.error||'خطأ','error');throw new Error(d.error)}
   return d
 }
 
@@ -495,14 +495,14 @@ async function generateFiles(){
 }
 
 async function gitPush(){
-  if(!confirm('هل أنت متأكد من رفع التغييرات إلى GitHub؟'))return;
-  setStatus('جاري الرفع...', 'fa-solid fa-circle-notch fa-spin');
+  if(!confirm('هل تريد رفع التغييرات إلى GitHub؟'))return;
   try{
     const r=await api('POST','/git-push');
     toast(r.message,'success');
-    setStatus(r.message, 'fa-solid fa-check')
+    setStatus(r.message)
   }catch(e){
-    setStatus('فشل الرفع', 'fa-solid fa-triangle-exclamation')
+    console.error('Git push error:', e.message || e);
+    toast('فشل الرفع: '+(e.message||'خطأ غير معروف'),'error')
   }
 }
 
