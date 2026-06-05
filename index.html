@@ -131,7 +131,7 @@ function render(){
   filtered.forEach(e=>{
     const tr=document.createElement('tr');
     if(e.nsfw==='true')tr.className='nsfw';
-    tr.innerHTML='<td>'+(e.name||'')+'</td><td>'+(e.package||'')+'</td><td>'+(e.version||'')+'</td><td>'+(e.author||'')+'</td><td>'+(e.lang||'')+'</td><td><span class="badge badge-'+(e.type||'')+'">'+(e.type||'')+'</span></td><td>'+(e.nsfw==='true'?'<span class="nsfw-badge">+18</span>':'')+'</td><td><a class="source-link" href="https://github.com/shinron1/animatoo-extenshen/blob/main/repo/'+e.url+'" target="_blank">الشفرة</a></td>';
+    tr.innerHTML='<td>'+(e.name||'')+'</td><td>'+(e.package||'')+'</td><td>'+(e.version||'')+'</td><td>'+(e.author||'')+'</td><td>'+(e.lang||'')+'</td><td><span class="badge badge-'+(e.type||'')+'">'+(e.type||'')+'</span></td><td>'+(e.nsfw==='true'?'<span class="nsfw-badge">+18</span>':'')+'</td><td><a class="source-link" href="https://github.com/shinron1/animatoo-extensions/blob/main/repo/'+e.url+'" target="_blank">الشفرة</a></td>';
     tbody.appendChild(tr)
   })
 }

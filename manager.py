@@ -729,7 +729,7 @@ class Handler(BaseHTTPRequestHandler):
             ext_data = {k: meta[k] for k in ["name", "version", "author", "lang", "license", "icon", "package", "type", "webSite", "description", "nsfw", "tags", "url"] if k in meta}
             extensions.append(ext_data)
             if meta.get("nsfw") != "true":
-                url = f"https://github.com/shinron1/animatoo-extenshen/blob/main/repo/{fn}"
+                url = f"https://github.com/shinron1/animatoo-extensions/blob/main/repo/{fn}"
                 readme_lines.append(f"| {meta.get('name','')} | {meta.get('package','')} | {meta.get('version','')} | {meta.get('author','')} | {meta.get('lang','')} | {meta.get('type','')} | [Source Code]({url}) |\n")
         with open(os.path.join(WORKDIR, "index.json"), "w", encoding="utf-8") as f:
             json.dump(extensions, f, indent=1, ensure_ascii=False)
