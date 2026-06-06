@@ -12,12 +12,11 @@
 // ==/MiruExtension==
 
 const API = "https://api.azoramoon.com"
-const GENRES = { all: "الكل" }
 
 export default class extends Extension {
-  async req(path, opts) {
+  async req(path) {
     return this.request(path, {
-      headers: { "Miru-Url": API, "Referer": "https://azoramoon.com", ...opts?.headers }
+      headers: { "Miru-Url": API, "Referer": "https://azoramoon.com" }
     })
   }
 
@@ -26,7 +25,7 @@ export default class extends Extension {
     const data = JSON.parse(body)
     return data.posts.map(p => ({
       title: p.postTitle,
-      url: "/detail/" + p.slug,
+      url: "/detail/" + p.slug + "?id=" + p.id,
       cover: p.featuredImage,
       headers: { "Referer": "https://azoramoon.com" }
     }))
@@ -44,7 +43,7 @@ export default class extends Extension {
     }
     return list.map(p => ({
       title: p.postTitle,
-      url: "/detail/" + p.slug,
+      url: "/detail/" + p.slug + "?id=" + p.id,
       cover: p.featuredImage,
       headers: { "Referer": "https://azoramoon.com" }
     }))
@@ -59,30 +58,34 @@ export default class extends Extension {
   }
 
   async detail(url) {
-    const slug = url.split("/detail/")[1]
-    const html = await this.request("/series/" + slug)
-    const descMatch = /<meta\s+name="description"\s+content="([^"]+)"/.exec(html)
-    const desc = descMatch ? descMatch[1] : ""
-    let postId = null
-    const pidRaw = /postId(?:&quot;|"):\s*\[0,(\d+)\]/.exec(html)
-    if (pidRaw) postId = parseInt(pidRaw[1])
+    const qIdx = url.indexOf("?")
+    const slug = url.substring(url.indexOf("/detail/") + 8, qIdx > -1 ? qIdx : undefined)
+    const params = qIdx > -1 ? new URLSearchParams(url.substring(qIdx)) : new URLSearchParams()
+    let postId = params.get("id") ? parseInt(params.get("id")) : null
+
     if (!postId) {
-      const mpidRaw = /mangaPostId(?:&quot;|"|":)(\d+)/.exec(html)
-      if (mpidRaw) postId = parseInt(mpidRaw[1])
+      try {
+        const html = await this.request("/series/" + slug)
+        const pidRaw = /postId(?:&quot;|"):\s*\[0,(\d+)\]/.exec(html)
+        if (pidRaw) postId = parseInt(pidRaw[1])
+        if (!postId) {
+          const mpidRaw = /mangaPostId(?:&quot;|"|":)(\d+)/.exec(html)
+          if (mpidRaw) postId = parseInt(mpidRaw[1])
+        }
+      } catch (e) {}
     }
-    const titleMatch = /<meta\s+property="og:title"\s+content="([^"]+)"/.exec(html)
-    const title = titleMatch ? titleMatch[1] : slug
-    const coverMatch = /<meta\s+property="og:image"\s+content="([^"]+)"/.exec(html)
-    const cover = coverMatch ? coverMatch[1] : ""
 
     if (postId) {
       try {
-        const chBody = await this.req("/api/chapters?postId=" + postId + "&perPage=999")
+        const chBody = await this.req("/api/chapters?postId=" + postId + "&perPage=200")
         const chData = JSON.parse(chBody)
-        const accessible = (chData.post?.chapters || []).filter(c => c.isAccessible)
+        const p = chData.post
+        const accessible = (p?.chapters || []).filter(c => c.isAccessible)
         accessible.sort((a, b) => b.number - a.number)
         return {
-          title, cover, desc,
+          title: p?.postTitle || slug,
+          cover: p?.featuredImage || "",
+          desc: "",
           headers: { "Referer": "https://azoramoon.com" },
           episodes: [{
             title: "الفصول",
@@ -94,7 +97,7 @@ export default class extends Extension {
         }
       } catch (e) {}
     }
-    return { title, cover, desc, headers: { "Referer": "https://azoramoon.com" }, episodes: [] }
+    return { title: slug, cover: "", desc: "", headers: { "Referer": "https://azoramoon.com" }, episodes: [] }
   }
 
   async watch(url) {
