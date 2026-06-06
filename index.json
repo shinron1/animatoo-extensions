@@ -9,5 +9,16 @@
   "type": "bangumi",
   "webSite": "https://anime3rb.com",
   "url": "com.arab.anime3rb.js"
+ },
+ {
+  "name": "Azora Manga",
+  "version": "v1.0.0",
+  "author": "you",
+  "lang": "ar",
+  "icon": "https://azoramoon.com/favicon.ico",
+  "package": "com.arab.azoramanga",
+  "type": "manga",
+  "webSite": "https://azoramoon.com",
+  "url": "com.arab.azoramanga.js"
  }
 ]
