@@ -1,1 +1,13 @@
-[]
+[
+ {
+  "name": "anime3rb",
+  "version": "v1.0.0",
+  "author": "you",
+  "lang": "ar",
+  "icon": "https://anime3rb.com/favicon.ico",
+  "package": "com.arab.anime3rb",
+  "type": "bangumi",
+  "webSite": "https://anime3rb.com",
+  "url": "com.arab.anime3rb.js"
+ }
+]
